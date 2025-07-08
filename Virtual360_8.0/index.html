@@ -264,7 +264,7 @@
                                 <i class="fas fa-laptop-code"></i>
                                 <span>Eszequiel Nieto Muñoz</span>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -277,6 +277,18 @@
                         <div class="copyright">
                             <i class="fas fa-copyright"></i>
                             <span>2025 Todos los derechos reservados</span>
+                        </div>
+                        <div>
+                            <button class="btn_modal" onclick="mostrarUbicacion()">Mostrar ubicación y ruta</button>
+                            <!-- Modal -->
+                            <div id="ubicacionModal" class="modal">
+                                <div class="modal-content">
+                                    <span class="close" onclick="cerrarModal()">&times;</span>
+                                    <h2>Tu ubicación actual</h2>
+                                    <p id="ubicacionInfo">Obteniendo ubicación...</p>
+                                    <a id="linkRuta" href="#" target="_blank">Cómo llegar a CONALEP Atizapán I</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

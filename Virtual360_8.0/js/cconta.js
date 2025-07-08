@@ -24,3 +24,53 @@ const countUp = setInterval(() => {
     }
     counterDiv.innerText = `Numero de visitas. a la pagina: ${Math.floor(current)}`;
 }, interval);
+
+// funcion para determinar la geolocalizacion 
+function mostrarUbicacion() {
+    const modal = document.getElementById("ubicacionModal");
+    const ubicacionInfo = document.getElementById("ubicacionInfo");
+    const linkRuta = document.getElementById("linkRuta");
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+
+                ubicacionInfo.textContent = `Latitud: ${lat.toFixed(6)}, Longitud: ${lon.toFixed(6)}`;
+
+                // Coordenadas de CONALEP Atizapán I
+                const destinoLat = 19.573809;
+                const destinoLon = -99.257534;
+
+                // Enlace a Google Maps con ruta
+                const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${lat},${lon}&destination=${destinoLat},${destinoLon}&travelmode=driving`;
+
+                linkRuta.href = mapsUrl;
+                linkRuta.textContent = "Cómo llegar a CONALEP Atizapán I";
+
+                modal.style.display = "block";
+            },
+            function (error) {
+                ubicacionInfo.textContent = "No se pudo obtener tu ubicación.";
+                linkRuta.style.display = "none";
+                modal.style.display = "block";
+            }
+        );
+    } else {
+        ubicacionInfo.textContent = "La geolocalización no está disponible en tu navegador.";
+        modal.style.display = "block";
+    }
+}
+
+function cerrarModal() {
+    document.getElementById("ubicacionModal").style.display = "none";
+}
+
+// Cerrar modal al hacer clic fuera del contenido
+window.onclick = function (event) {
+    const modal = document.getElementById("ubicacionModal");
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+};
