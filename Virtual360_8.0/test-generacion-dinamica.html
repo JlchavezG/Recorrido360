@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba - Generación Dinámica de Miniaturas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-title {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .thumbnail-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .thumbnail-item {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            min-width: 120px;
+        }
+        .thumbnail-item img {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 3px;
+        }
+        .thumbnail-item span {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+        }
+        .active {
+            border-color: #007bff;
+            background: #e3f2fd;
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .log-container {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Prueba - Sistema de Generación Dinámica de Miniaturas</h1>
+        
+        <div class="test-section">
+            <h2 class="test-title">1. Verificación de Configuración</h2>
+            <div id="config-test"></div>
+        </div>
+
+        <div class="test-section">
+            <h2 class="test-title">2. Generación de Miniaturas</h2>
+            <button class="test-button" onclick="testGenerateThumbnails()">Generar Miniaturas</button>
+            <div id="generation-test"></div>
+            <div id="thumbnails-preview" class="thumbnail-preview"></div>
+        </div>
+
+        <div class="test-section">
+            <h2 class="test-title">3. Funcionalidad de Marcado Activo</h2>
+            <button class="test-button" onclick="testMarkActive()">Probar Marcado Activo</button>
+            <div id="marking-test"></div>
+        </div>
+
+        <div class="test-section">
+            <h2 class="test-title">4. Eventos de Clic</h2>
+            <button class="test-button" onclick="testClickEvents()">Probar Eventos</button>
+            <div id="events-test"></div>
+        </div>
+
+        <div class="test-section">
+            <h2 class="test-title">5. Logs del Sistema</h2>
+            <div id="logs-container" class="log-container"></div>
+        </div>
+
+        <div class="test-section">
+            <h2 class="test-title">6. Resumen de Pruebas</h2>
+            <div id="summary-test"></div>
+        </div>
+    </div>
+
+    <!-- Contenedor para miniaturas generadas -->
+    <div id="scene-thumbnails-container" style="display: none;"></div>
+
+    <script>
+        // Simular la configuración del tour
+        const tourConfig = {
+            scenes: {
+                'plaza-roja': {
+                    title: 'Plaza Roja',
+                    description: 'Área central de reunión y eventos al aire libre',
+                    panorama: 'assets/360/plaza-roja.jpeg',
+                    thumbnail: {
+                        image: 'assets/360/plaza-roja.jpeg',
+                        alt: 'Plaza Roja',
+                        displayName: 'Plaza Roja'
+                    }
+                },
+                'taller-autotronica': {
+                    title: 'Taller de Autotrónica',
+                    description: 'Laboratorio especializado en autotrónica',
+                    panorama: 'assets/360/Autotronica.jpeg',
+                    thumbnail: {
+                        image: 'assets/360/Autotronica.jpeg',
+                        alt: 'Taller de Autotrónica',
+                        displayName: 'Taller de Autotrónica'
+                    }
+                },
+                'exterior': {
+                    title: 'Vista Exterior',
+                    description: 'Vista exterior del plantel',
+                    panorama: null,
+                    isStreetView: true,
+                    thumbnail: {
+                        image: 'assets/360/exterior.svg',
+                        alt: 'Vista Exterior',
+                        displayName: 'Exterior (Maps)',
+                        isStreetView: true
+                    }
+                }
+            }
+        };
+
+        // Función para generar miniaturas (copia de la función real)
+        function generateThumbnails() {
+            console.log('Generando miniaturas dinámicamente...');
+            addLog('Generando miniaturas dinámicamente...');
+            
+            const thumbnailsContainer = document.getElementById('scene-thumbnails-container');
+            if (!thumbnailsContainer) {
+                console.error('Contenedor de miniaturas no encontrado');
+                addLog('❌ Contenedor de miniaturas no encontrado', 'error');
+                return;
+            }
+
+            // Limpiar contenedor
+            thumbnailsContainer.innerHTML = '';
+
+            // Obtener todas las escenas de la configuración
+            const scenes = tourConfig.scenes;
+            const sceneKeys = Object.keys(scenes);
+
+            // Ordenar las escenas
+            const sceneOrder = ['plaza-roja', 'taller-autotronica', 'exterior'];
+            const orderedScenes = sceneOrder.filter(key => sceneKeys.includes(key));
+
+            // Crear miniaturas para cada escena
+            orderedScenes.forEach(sceneKey => {
+                const scene = scenes[sceneKey];
+                if (!scene || !scene.thumbnail) {
+                    console.warn(`Escena ${sceneKey} no tiene configuración de miniatura`);
+                    addLog(`⚠️ Escena ${sceneKey} no tiene configuración de miniatura`, 'warning');
+                    return;
+                }
+
+                const thumbnailBtn = document.createElement('button');
+                thumbnailBtn.className = 'thumbnail-btn';
+                thumbnailBtn.setAttribute('data-scene', sceneKey);
+                
+                // Agregar tooltip si es Street View
+                if (scene.thumbnail.isStreetView) {
+                    thumbnailBtn.setAttribute('data-tooltip', 'Ver en Google Maps Street View');
+                }
+
+                // Crear contenido de la miniatura
+                const img = document.createElement('img');
+                img.src = scene.thumbnail.image;
+                img.alt = scene.thumbnail.alt;
+                
+                // ID especial para la miniatura exterior
+                if (sceneKey === 'exterior') {
+                    img.id = 'exterior-thumbnail-img';
+                }
+
+                const span = document.createElement('span');
+                
+                // Agregar icono para Street View
+                if (scene.thumbnail.isStreetView) {
+                    span.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${scene.thumbnail.displayName}`;
+                } else {
+                    span.textContent = scene.thumbnail.displayName;
+                }
+
+                thumbnailBtn.appendChild(img);
+                thumbnailBtn.appendChild(span);
+
+                // Agregar evento de clic
+                thumbnailBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sceneId = this.getAttribute('data-scene');
+                    if (sceneId) {
+                        addLog(`🖱️ Clic en miniatura: ${sceneId}`, 'info');
+                        markActiveThumbnail(sceneId);
+                    }
+                });
+
+                thumbnailsContainer.appendChild(thumbnailBtn);
+            });
+
+            console.log(`✅ Se generaron ${orderedScenes.length} miniaturas dinámicamente`);
+            addLog(`✅ Se generaron ${orderedScenes.length} miniaturas dinámicamente`, 'success');
+        }
+
+        // Función para marcar miniatura activa
+        function markActiveThumbnail(sceneId) {
+            document.querySelectorAll('.thumbnail-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-scene') === sceneId);
+            });
+            addLog(`🎯 Miniatura activa marcada: ${sceneId}`, 'success');
+        }
+
+        // Función para agregar logs
+        function addLog(message, type = 'info') {
+            const logsContainer = document.getElementById('logs-container');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = type;
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            logsContainer.appendChild(logEntry);
+            logsContainer.scrollTop = logsContainer.scrollHeight;
+        }
+
+        // Función para mostrar resultados de prueba
+        function showTestResult(containerId, message, type = 'info') {
+            const container = document.getElementById(containerId);
+            const result = document.createElement('div');
+            result.className = `test-result ${type}`;
+            result.textContent = message;
+            container.appendChild(result);
+        }
+
+        // Prueba 1: Verificación de configuración
+        function testConfiguration() {
+            const container = document.getElementById('config-test');
+            container.innerHTML = '';
+
+            try {
+                if (!tourConfig) {
+                    showTestResult('config-test', '❌ tourConfig no está definido', 'error');
+                    return false;
+                }
+
+                if (!tourConfig.scenes) {
+                    showTestResult('config-test', '❌ tourConfig.scenes no está definido', 'error');
+                    return false;
+                }
+
+                const sceneCount = Object.keys(tourConfig.scenes).length;
+                showTestResult('config-test', `✅ Configuración válida. ${sceneCount} escenas encontradas`, 'success');
+
+                // Verificar estructura de miniaturas
+                let validThumbnails = 0;
+                Object.entries(tourConfig.scenes).forEach(([key, scene]) => {
+                    if (scene.thumbnail && scene.thumbnail.image && scene.thumbnail.displayName) {
+                        validThumbnails++;
+                    }
+                });
+
+                showTestResult('config-test', `✅ ${validThumbnails}/${sceneCount} escenas tienen configuración de miniatura válida`, 'success');
+                return true;
+
+            } catch (error) {
+                showTestResult('config-test', `❌ Error en configuración: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // Prueba 2: Generación de miniaturas
+        function testGenerateThumbnails() {
+            const container = document.getElementById('generation-test');
+            container.innerHTML = '';
+
+            try {
+                generateThumbnails();
+                
+                const thumbnails = document.querySelectorAll('.thumbnail-btn');
+                showTestResult('generation-test', `✅ Se generaron ${thumbnails.length} miniaturas`, 'success');
+
+                // Mostrar preview de miniaturas
+                const preview = document.getElementById('thumbnails-preview');
+                preview.innerHTML = '';
+                
+                thumbnails.forEach(btn => {
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'thumbnail-item';
+                    
+                    const img = btn.querySelector('img');
+                    const span = btn.querySelector('span');
+                    
+                    if (img) {
+                        const previewImg = document.createElement('img');
+                        previewImg.src = img.src;
+                        previewImg.alt = img.alt;
+                        previewItem.appendChild(previewImg);
+                    }
+                    
+                    if (span) {
+                        const previewSpan = document.createElement('span');
+                        previewSpan.textContent = span.textContent;
+                        previewItem.appendChild(previewSpan);
+                    }
+                    
+                    preview.appendChild(previewItem);
+                });
+
+            } catch (error) {
+                showTestResult('generation-test', `❌ Error generando miniaturas: ${error.message}`, 'error');
+            }
+        }
+
+        // Prueba 3: Marcado activo
+        function testMarkActive() {
+            const container = document.getElementById('marking-test');
+            container.innerHTML = '';
+
+            try {
+                const thumbnails = document.querySelectorAll('.thumbnail-btn');
+                if (thumbnails.length === 0) {
+                    showTestResult('marking-test', '❌ No hay miniaturas para probar', 'error');
+                    return;
+                }
+
+                // Probar marcado de cada miniatura
+                thumbnails.forEach((btn, index) => {
+                    const sceneId = btn.getAttribute('data-scene');
+                    markActiveThumbnail(sceneId);
+                    
+                    const activeCount = document.querySelectorAll('.thumbnail-btn.active').length;
+                    if (activeCount === 1) {
+                        showTestResult('marking-test', `✅ Marcado activo funciona para: ${sceneId}`, 'success');
+                    } else {
+                        showTestResult('marking-test', `❌ Error en marcado activo para: ${sceneId}`, 'error');
+                    }
+                });
+
+            } catch (error) {
+                showTestResult('marking-test', `❌ Error probando marcado activo: ${error.message}`, 'error');
+            }
+        }
+
+        // Prueba 4: Eventos de clic
+        function testClickEvents() {
+            const container = document.getElementById('events-test');
+            container.innerHTML = '';
+
+            try {
+                const thumbnails = document.querySelectorAll('.thumbnail-btn');
+                if (thumbnails.length === 0) {
+                    showTestResult('events-test', '❌ No hay miniaturas para probar eventos', 'error');
+                    return;
+                }
+
+                showTestResult('events-test', `✅ ${thumbnails.length} miniaturas tienen eventos de clic configurados`, 'success');
+                showTestResult('events-test', '💡 Haz clic en las miniaturas para probar los eventos', 'info');
+
+            } catch (error) {
+                showTestResult('events-test', `❌ Error probando eventos: ${error.message}`, 'error');
+            }
+        }
+
+        // Ejecutar pruebas al cargar
+        window.addEventListener('load', function() {
+            addLog('🚀 Iniciando pruebas del sistema de generación dinámica', 'info');
+            
+            // Ejecutar prueba de configuración
+            testConfiguration();
+            
+            // Generar miniaturas automáticamente
+            setTimeout(() => {
+                testGenerateThumbnails();
+            }, 500);
+        });
+    </script>
+</body>
+</html> 

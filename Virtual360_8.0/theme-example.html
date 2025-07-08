@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo de Sistema de Temas</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Estilos de temas -->
+    <link rel="stylesheet" href="./css/themes.css">
+    
+    <style>
+        /* Estilos específicos del ejemplo */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            background: var(--bg-main);
+            color: var(--text-dark);
+            transition: var(--transition-slow);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: var(--bg-section);
+            border-radius: 10px;
+            box-shadow: var(--shadow-medium);
+            border: 1px solid var(--border-light);
+        }
+        
+        h1 {
+            color: var(--text-color);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .demo-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+        }
+        
+        .demo-section h2 {
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .demo-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: var(--gradient-warm);
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+        
+        .demo-button:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .demo-button.secondary {
+            background: var(--gradient-cold);
+        }
+        
+        .demo-button.secondary:hover {
+            background: var(--primary-color);
+        }
+        
+        .info-box {
+            background: var(--bg-card);
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid var(--accent-color);
+            margin: 15px 0;
+        }
+        
+        .code-block {
+            background: var(--bg-main);
+            color: var(--text-light);
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            border: 1px solid var(--border-light);
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            background: var(--success);
+            color: var(--text-light);
+        }
+        
+        .status-indicator.dark {
+            background: var(--primary-color);
+        }
+        
+        .status-indicator.light {
+            background: var(--warning);
+            color: var(--text-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌙☀️ Sistema de Temas - Ejemplo</h1>
+        
+        <div class="demo-section">
+            <h2>Estado Actual</h2>
+            <p>El botón de cambio de tema está en la esquina superior derecha.</p>
+            <div id="theme-status">
+                <span class="status-indicator dark">Tema Oscuro Activo</span>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>API de Control</h2>
+            <p>Usa estos botones para controlar el tema programáticamente:</p>
+            
+            <div class="button-group">
+                <button class="demo-button" onclick="setDarkTheme()">
+                    <i class="fas fa-moon"></i> Tema Oscuro
+                </button>
+                <button class="demo-button" onclick="setLightTheme()">
+                    <i class="fas fa-sun"></i> Tema Claro
+                </button>
+                <button class="demo-button" onclick="toggleTheme()">
+                    <i class="fas fa-exchange-alt"></i> Alternar
+                </button>
+                <button class="demo-button secondary" onclick="resetTheme()">
+                    <i class="fas fa-undo"></i> Reset
+                </button>
+            </div>
+            
+            <div class="info-box">
+                <strong>💡 Tip:</strong> También puedes usar la API directamente en la consola del navegador:
+                <div class="code-block">
+window.themeManager.setTheme('light');<br>
+window.themeManager.toggleTheme();<br>
+window.themeManager.getCurrentTheme();
+                </div>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>Eventos</h2>
+            <p>Los cambios de tema disparan eventos que puedes escuchar:</p>
+            
+            <div class="button-group">
+                <button class="demo-button" onclick="addEventListener()">
+                    <i class="fas fa-plus"></i> Agregar Listener
+                </button>
+                <button class="demo-button secondary" onclick="removeEventListener()">
+                    <i class="fas fa-minus"></i> Remover Listener
+                </button>
+            </div>
+            
+            <div id="event-log" class="info-box" style="display: none;">
+                <h4>📝 Log de Eventos:</h4>
+                <div id="event-content"></div>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>Características del Sistema</h2>
+            <ul>
+                <li>✅ <strong>Persistencia:</strong> Guarda la preferencia en localStorage</li>
+                <li>✅ <strong>Detección automática:</strong> Respeta las preferencias del sistema</li>
+                <li>✅ <strong>Transiciones suaves:</strong> Animaciones fluidas entre temas</li>
+                <li>✅ <strong>Accesibilidad:</strong> Soporte completo para teclado y lectores de pantalla</li>
+                <li>✅ <strong>Responsive:</strong> Optimizado para móviles</li>
+                <li>✅ <strong>API completa:</strong> Control programático total</li>
+            </ul>
+        </div>
+        
+        <div class="demo-section">
+            <h2>Variables CSS Disponibles</h2>
+            <p>El sistema proporciona estas variables CSS que puedes usar en tus estilos:</p>
+            
+            <div class="code-block">
+/* Colores principales */<br>
+--primary-color<br>
+--secondary-color<br>
+--accent-color<br><br>
+
+/* Colores de texto */<br>
+--text-color<br>
+--text-light<br>
+--text-dark<br><br>
+
+/* Colores de fondo */<br>
+--bg-main<br>
+--bg-section<br>
+--bg-card<br>
+--bg-overlay<br><br>
+
+/* Gradientes */<br>
+--gradient-cold<br>
+--gradient-hover<br>
+--gradient-warm<br><br>
+
+/* Sombras y bordes */<br>
+--shadow-light<br>
+--shadow-medium<br>
+--shadow-heavy<br>
+--border-light<br>
+--border-medium
+            </div>
+        </div>
+    </div>
+
+    <!-- Script del sistema de temas -->
+    <script src="js/theme.js"></script>
+    
+    <script>
+        // Funciones de ejemplo para la API
+        function setDarkTheme() {
+            window.themeManager.setTheme('dark');
+            updateStatus();
+        }
+        
+        function setLightTheme() {
+            window.themeManager.setTheme('light');
+            updateStatus();
+        }
+        
+        function toggleTheme() {
+            window.themeManager.toggleTheme();
+            updateStatus();
+        }
+        
+        function resetTheme() {
+            window.themeManager.resetToSystemPreference();
+            updateStatus();
+        }
+        
+        function updateStatus() {
+            const status = document.getElementById('theme-status');
+            const theme = window.themeManager.getCurrentTheme();
+            const themeInfo = window.themeManager.getCurrentThemeInfo();
+            
+            status.innerHTML = `
+                <span class="status-indicator ${theme}">
+                    Tema ${themeInfo.name} Activo
+                </span>
+            `;
+        }
+        
+        // Funciones para eventos
+        let eventListenerAdded = false;
+        
+        function addEventListener() {
+            if (eventListenerAdded) return;
+            
+            document.addEventListener('themeChanged', handleThemeChange);
+            eventListenerAdded = true;
+            
+            const log = document.getElementById('event-log');
+            log.style.display = 'block';
+            
+            addLogEntry('✅ Listener agregado. Los cambios de tema se mostrarán aquí.');
+        }
+        
+        function removeEventListener() {
+            if (!eventListenerAdded) return;
+            
+            document.removeEventListener('themeChanged', handleThemeChange);
+            eventListenerAdded = false;
+            
+            addLogEntry('❌ Listener removido.');
+        }
+        
+        function handleThemeChange(event) {
+            const theme = event.detail.theme;
+            const themeInfo = event.detail.themeInfo;
+            
+            addLogEntry(`🔄 Tema cambiado a: ${themeInfo.name} (${theme})`);
+        }
+        
+        function addLogEntry(message) {
+            const content = document.getElementById('event-content');
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.innerHTML = `<small>[${timestamp}]</small> ${message}`;
+            entry.style.marginBottom = '5px';
+            
+            content.appendChild(entry);
+            content.scrollTop = content.scrollHeight;
+        }
+        
+        // Actualizar estado inicial
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(updateStatus, 100);
+        });
+    </script>
+</body>
+</html> 

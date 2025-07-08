@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Botones - Virtual360</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/themes.css">
+    <style>
+        body {
+            background: #000020;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            padding: 20px;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+        }
+        .scene-thumbnails-wrapper {
+            position: relative;
+            margin: 20px 0;
+            background: rgba(34, 40, 49, 0.28);
+            border-radius: 18px;
+            padding: 10px;
+        }
+        .scene-thumbnails {
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            min-height: 80px;
+            transition: all 0.3s ease;
+        }
+        .thumbnail-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 100px;
+            text-align: center;
+        }
+        .thumbnail-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        .mini-carousel-controls {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            display: flex;
+            gap: 8px;
+        }
+        .mini-carousel-btn {
+            background: rgba(255,255,255,0.2);
+            color: #ff9800;
+            border: 1px solid #ff9800;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .mini-carousel-btn:hover {
+            background: #ff9800;
+            color: white;
+        }
+        .thumbnails-hidden-indicator {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(34, 40, 49, 0.95);
+            color: #fff;
+            padding: 15px 20px;
+            border-radius: 30px;
+            border: 2px solid #ff9800;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .thumbnails-hidden-indicator.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .show-thumbnails-btn {
+            background: #ff9800;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Prueba de Botones Virtual360</h1>
+        
+        <div class="test-section">
+            <h3>Estado Actual:</h3>
+            <div class="status" id="status">
+                Cargando...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>Controles de Miniaturas:</h3>
+            <div class="scene-thumbnails-wrapper" id="thumbnails-wrapper">
+                <div class="mini-carousel-controls">
+                    <button id="mini-carousel-minimize-btn" class="mini-carousel-btn" title="Minimizar/Maximizar miniaturas">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button id="mini-carousel-hide-btn" class="mini-carousel-btn" title="Ocultar/Mostrar miniaturas">
+                        <i class="fas fa-eye-slash"></i>
+                    </button>
+                </div>
+                
+                <div class="scene-thumbnails" id="thumbnails">
+                    <button class="thumbnail-btn">Miniatura 1</button>
+                    <button class="thumbnail-btn">Miniatura 2</button>
+                    <button class="thumbnail-btn">Miniatura 3</button>
+                    <button class="thumbnail-btn">Miniatura 4</button>
+                    <button class="thumbnail-btn">Miniatura 5</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>Indicador de Miniaturas Ocultas:</h3>
+            <div id="thumbnails-hidden-indicator" class="thumbnails-hidden-indicator">
+                <i class="fas fa-eye-slash"></i>
+                Miniaturas ocultas
+                <button id="show-thumbnails-btn" class="show-thumbnails-btn" title="Mostrar miniaturas">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>Atajos de Teclado:</h3>
+            <ul>
+                <li><strong>Ctrl + T:</strong> Minimizar/Maximizar miniaturas</li>
+                <li><strong>Ctrl + H:</strong> Ocultar/Mostrar miniaturas</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Función para actualizar el estado
+        function updateStatus() {
+            const thumbnails = document.getElementById('thumbnails');
+            const wrapper = document.getElementById('thumbnails-wrapper');
+            const indicator = document.getElementById('thumbnails-hidden-indicator');
+            
+            const isMinimized = thumbnails.classList.contains('minimized');
+            const isHidden = wrapper.classList.contains('hidden');
+            const isIndicatorVisible = indicator.classList.contains('show');
+            
+            const status = document.getElementById('status');
+            status.innerHTML = `
+                <strong>Estado de las miniaturas:</strong><br>
+                • Minimizadas: ${isMinimized ? '✅ Sí' : '❌ No'}<br>
+                • Ocultas: ${isHidden ? '✅ Sí' : '❌ No'}<br>
+                • Indicador visible: ${isIndicatorVisible ? '✅ Sí' : '❌ No'}<br>
+                • localStorage minimizado: ${localStorage.getItem('miniCarouselMinimized') || 'null'}<br>
+                • localStorage oculto: ${localStorage.getItem('miniCarouselHidden') || 'null'}
+            `;
+        }
+
+        // Función para mostrar notificaciones
+        function showNotification(text, type = 'info', duration = 3000) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'error' ? '#ff4444' : type === 'success' ? '#44ff44' : '#ff9800'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = text;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, duration);
+        }
+
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Iniciando prueba de botones...');
+            
+            const thumbnails = document.getElementById('thumbnails');
+            const wrapper = document.getElementById('thumbnails-wrapper');
+            const miniMinBtn = document.getElementById('mini-carousel-minimize-btn');
+            const miniHideBtn = document.getElementById('mini-carousel-hide-btn');
+            const showThumbnailsBtn = document.getElementById('show-thumbnails-btn');
+
+            // Restaurar estado desde localStorage
+            if (localStorage.getItem('miniCarouselMinimized') === 'true') {
+                thumbnails.classList.add('minimized');
+                miniMinBtn.innerHTML = '<i class="fas fa-plus"></i>';
+            }
+            if (localStorage.getItem('miniCarouselHidden') === 'true') {
+                wrapper.classList.add('hidden');
+                miniHideBtn.innerHTML = '<i class="fas fa-eye"></i>';
+                document.getElementById('thumbnails-hidden-indicator').classList.add('show');
+            }
+
+            // Configurar botón minimizar
+            miniMinBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const minimized = thumbnails.classList.toggle('minimized');
+                miniMinBtn.innerHTML = minimized ? '<i class="fas fa-plus"></i>' : '<i class="fas fa-minus"></i>';
+                localStorage.setItem('miniCarouselMinimized', minimized);
+                showNotification(`Miniaturas ${minimized ? 'minimizadas' : 'maximizadas'}`);
+                updateStatus();
+            });
+
+            // Configurar botón ocultar
+            miniHideBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const hidden = wrapper.classList.toggle('hidden');
+                miniHideBtn.innerHTML = hidden ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+                localStorage.setItem('miniCarouselHidden', hidden);
+                
+                const indicator = document.getElementById('thumbnails-hidden-indicator');
+                if (hidden) {
+                    indicator.classList.add('show');
+                } else {
+                    indicator.classList.remove('show');
+                }
+                
+                showNotification(`Miniaturas ${hidden ? 'ocultadas' : 'mostradas'}`);
+                updateStatus();
+            });
+
+            // Configurar botón mostrar
+            showThumbnailsBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                wrapper.classList.remove('hidden');
+                miniHideBtn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+                localStorage.setItem('miniCarouselHidden', false);
+                document.getElementById('thumbnails-hidden-indicator').classList.remove('show');
+                showNotification('Miniaturas mostradas desde indicador');
+                updateStatus();
+            });
+
+            // Atajos de teclado
+            document.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 't') {
+                    e.preventDefault();
+                    miniMinBtn.click();
+                }
+                if ((e.ctrlKey || e.metaKey) && e.key === 'h') {
+                    e.preventDefault();
+                    miniHideBtn.click();
+                }
+            });
+
+            // Actualizar estado inicial
+            updateStatus();
+            
+            console.log('✅ Prueba de botones inicializada correctamente');
+        });
+
+        // Estilos CSS para animaciones
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html> 

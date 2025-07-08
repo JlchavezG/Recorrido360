@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba Formulario de Contacto - CONALEP Virtual 360°</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .test-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .test-header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .test-header p {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background: #fafafa;
+        }
+        
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .log-container {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+        
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        
+        .test-button:hover {
+            background: #0056b3;
+        }
+        
+        .test-button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>🧪 Prueba Formulario de Contacto</h1>
+            <p>CONALEP Atizapán 1 - Recorrido Virtual 360°</p>
+            <div id="emailjs-status" class="status-indicator status-warning">
+                Verificando EmailJS...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>📋 Estado de la Configuración</h3>
+            <div id="config-status"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📝 Formulario de Contacto</h3>
+            <form id="contactForm" class="contact-form">
+                <div class="form-group">
+                    <label for="name">Nombre</label>
+                    <input type="text" id="name" name="name" required autocomplete="name" placeholder="Tu nombre completo">
+                </div>
+                <div class="form-group">
+                    <label for="email">Correo Electrónico</label>
+                    <input type="email" id="email" name="email" required autocomplete="email" placeholder="tu@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="message">Mensaje</label>
+                    <textarea id="message" name="message" required autocomplete="off" placeholder="Tu mensaje aquí..."></textarea>
+                </div>
+                <button type="submit" class="submit-button">
+                    <i class="fas fa-paper-plane"></i>
+                    Enviar Mensaje
+                </button>
+            </form>
+        </div>
+
+        <div class="test-section">
+            <h3>🔧 Pruebas Manuales</h3>
+            <button class="test-button" onclick="testEmailJSInit()">Probar Inicialización EmailJS</button>
+            <button class="test-button" onclick="testFormValidation()">Probar Validación</button>
+            <button class="test-button" onclick="testEmailSend()">Probar Envío de Email</button>
+            <button class="test-button" onclick="clearLog()">Limpiar Log</button>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 Log de Actividad</h3>
+            <div id="log-container" class="log-container"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.1.0/dist/email.min.js"></script>
+    <script src="js/contact.js"></script>
+    
+    <script>
+        // Función para agregar logs
+        function addLog(message, type = 'info') {
+            const logContainer = document.getElementById('log-container');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `[${timestamp}] ${message}`;
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        // Función para limpiar log
+        function clearLog() {
+            document.getElementById('log-container').innerHTML = '';
+        }
+
+        // Verificar configuración de EmailJS
+        function checkEmailJSConfig() {
+            const configStatus = document.getElementById('config-status');
+            const emailjsStatus = document.getElementById('emailjs-status');
+            
+            if (typeof emailjs !== 'undefined') {
+                emailjsStatus.className = 'status-indicator status-success';
+                emailjsStatus.textContent = '✅ EmailJS disponible';
+                addLog('EmailJS está disponible');
+                
+                // Verificar configuración
+                const config = window.EMAILJS_CONFIG;
+                if (config) {
+                    configStatus.innerHTML = `
+                        <div class="status-indicator status-success">
+                            ✅ Configuración encontrada
+                        </div>
+                        <p><strong>Service ID:</strong> ${config.serviceId}</p>
+                        <p><strong>Template ID:</strong> ${config.templateId}</p>
+                        <p><strong>User ID:</strong> ${config.userId}</p>
+                        <p><strong>Email destino:</strong> ${config.toEmail}</p>
+                    `;
+                    addLog('Configuración de EmailJS verificada');
+                } else {
+                    configStatus.innerHTML = `
+                        <div class="status-indicator status-error">
+                            ❌ Configuración no encontrada
+                        </div>
+                    `;
+                    addLog('ERROR: Configuración de EmailJS no encontrada');
+                }
+            } else {
+                emailjsStatus.className = 'status-indicator status-error';
+                emailjsStatus.textContent = '❌ EmailJS no disponible';
+                addLog('ERROR: EmailJS no está disponible');
+            }
+        }
+
+        // Probar inicialización de EmailJS
+        function testEmailJSInit() {
+            addLog('Probando inicialización de EmailJS...');
+            try {
+                if (typeof emailjs !== 'undefined') {
+                    emailjs.init(window.EMAILJS_CONFIG.userId);
+                    addLog('✅ EmailJS inicializado correctamente');
+                } else {
+                    addLog('❌ EmailJS no está disponible');
+                }
+            } catch (error) {
+                addLog(`❌ Error al inicializar EmailJS: ${error.message}`);
+            }
+        }
+
+        // Probar validación del formulario
+        function testFormValidation() {
+            addLog('Probando validación del formulario...');
+            
+            // Simular datos válidos
+            document.getElementById('name').value = 'Juan Pérez';
+            document.getElementById('email').value = 'juan@test.com';
+            document.getElementById('message').value = 'Este es un mensaje de prueba para verificar la validación del formulario.';
+            
+            addLog('✅ Datos de prueba cargados');
+            
+            // Simular envío
+            const form = document.getElementById('contactForm');
+            const event = new Event('submit');
+            form.dispatchEvent(event);
+        }
+
+        // Probar envío de email
+        function testEmailSend() {
+            addLog('Probando envío de email...');
+            
+            // Verificar que EmailJS esté disponible
+            if (typeof emailjs === 'undefined') {
+                addLog('❌ EmailJS no está disponible');
+                return;
+            }
+            
+            // Verificar configuración
+            if (!window.EMAILJS_CONFIG) {
+                addLog('❌ Configuración de EmailJS no encontrada');
+                return;
+            }
+            
+            // Datos de prueba
+            const templateParams = {
+                from_name: 'Prueba Automática',
+                from_email: 'test@conalep.edu.mx',
+                message: 'Este es un mensaje de prueba automática para verificar el funcionamiento del sistema de emails.',
+                to_email: window.EMAILJS_CONFIG.toEmail,
+                time: new Date().toLocaleString('es-ES')
+            };
+            
+            addLog('Enviando email de prueba...');
+            
+            emailjs.send(window.EMAILJS_CONFIG.serviceId, window.EMAILJS_CONFIG.templateId, templateParams)
+                .then(function(response) {
+                    addLog(`✅ Email enviado exitosamente: ${response.status}`);
+                })
+                .catch(function(error) {
+                    addLog(`❌ Error al enviar email: ${error.status} - ${error.text}`);
+                });
+        }
+
+        // Inicializar cuando la página cargue
+        document.addEventListener('DOMContentLoaded', function() {
+            addLog('Página cargada, iniciando pruebas...');
+            checkEmailJSConfig();
+            
+            // Verificar formulario
+            const form = document.getElementById('contactForm');
+            if (form) {
+                addLog('✅ Formulario de contacto encontrado');
+            } else {
+                addLog('❌ Formulario de contacto no encontrado');
+            }
+        });
+
+        // Interceptar logs de la consola
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addLog('LOG: ' + args.join(' '));
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addLog('ERROR: ' + args.join(' '));
+        };
+    </script>
+</body>
+</html> 

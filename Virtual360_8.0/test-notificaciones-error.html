@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba Notificaciones de Error - CONALEP Virtual 360°</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .test-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .test-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .test-header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .test-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .test-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .test-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .test-button.error {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        }
+
+        .test-button.error:hover {
+            box-shadow: 0 10px 20px rgba(220, 53, 69, 0.3);
+        }
+
+        .test-button.success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+
+        .test-button.success:hover {
+            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+        }
+
+        .test-button.warning {
+            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+        }
+
+        .test-button.warning:hover {
+            box-shadow: 0 10px 20px rgba(255, 193, 7, 0.3);
+        }
+
+        .test-info {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .test-info h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .test-info ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .test-info li {
+            padding: 5px 0;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .test-info li i {
+            color: #667eea;
+            width: 16px;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #333;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .test-container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .test-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+        Volver al Tour
+    </a>
+
+    <div class="test-container">
+        <div class="test-header">
+            <h1>⚠️ Prueba Notificaciones de Error</h1>
+            <p>Verificación de duración y visibilidad de notificaciones</p>
+        </div>
+
+        <div class="test-buttons">
+            <button class="test-button error" onclick="testErrorNotification()">
+                <i class="fas fa-exclamation-triangle"></i>
+                Probar Notificación de Error (25s)
+            </button>
+            
+            <button class="test-button warning" onclick="testWarningNotification()">
+                <i class="fas fa-exclamation-circle"></i>
+                Probar Notificación de Advertencia (15s)
+            </button>
+            
+            <button class="test-button success" onclick="testSuccessNotification()">
+                <i class="fas fa-check-circle"></i>
+                Probar Notificación de Éxito (15s)
+            </button>
+            
+            <button class="test-button" onclick="testInfoNotification()">
+                <i class="fas fa-info-circle"></i>
+                Probar Notificación de Info (15s)
+            </button>
+        </div>
+
+        <div class="test-info">
+            <h3>📋 Información de las Notificaciones</h3>
+            <ul>
+                <li><i class="fas fa-clock"></i> <strong>Errores:</strong> 25 segundos de duración</li>
+                <li><i class="fas fa-clock"></i> <strong>Otros tipos:</strong> 15 segundos de duración</li>
+                <li><i class="fas fa-eye"></i> <strong>Errores:</strong> Borde rojo y efecto de parpadeo</li>
+                <li><i class="fas fa-times"></i> <strong>Cierre manual:</strong> Botón X en la esquina</li>
+                <li><i class="fas fa-mobile-alt"></i> <strong>Responsive:</strong> Adaptado para móviles</li>
+                <li><i class="fas fa-palette"></i> <strong>Tema oscuro:</strong> Compatible con ambos temas</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/contact.js"></script>
+    
+    <script>
+        // Funciones de prueba para notificaciones
+        function testErrorNotification() {
+            showNotification('Este es un mensaje de error de prueba. Tienes 25 segundos para leerlo completamente. La notificación tiene un borde rojo y efecto de parpadeo para mayor visibilidad.', 'error');
+        }
+        
+        function testWarningNotification() {
+            showNotification('Este es un mensaje de advertencia de prueba. Tienes 15 segundos para leerlo. Los mensajes de advertencia son importantes pero no críticos.', 'warning');
+        }
+        
+        function testSuccessNotification() {
+            showNotification('Este es un mensaje de éxito de prueba. Tienes 15 segundos para leerlo. Los mensajes de éxito confirman que una acción se completó correctamente.', 'success');
+        }
+        
+        function testInfoNotification() {
+            showNotification('Este es un mensaje informativo de prueba. Tienes 15 segundos para leerlo. Los mensajes informativos proporcionan información útil al usuario.', 'info');
+        }
+        
+        // Verificar que las funciones estén disponibles
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Página de prueba de notificaciones cargada');
+            
+            if (typeof showNotification !== 'undefined') {
+                console.log('✅ Función showNotification disponible');
+            } else {
+                console.error('❌ Función showNotification no encontrada');
+            }
+        });
+    </script>
+</body>
+</html> 

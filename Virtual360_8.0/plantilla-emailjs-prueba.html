@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nuevo Mensaje - CONALEP Virtual 360°</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        .content {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 0 0 10px 10px;
+        }
+        .field {
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .label {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        .value {
+            color: #333;
+            word-wrap: break-word;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: #666;
+            font-size: 12px;
+            border-top: 1px solid #e0e0e0;
+        }
+        .logo {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">🏫</div>
+        <h1>Nuevo Mensaje del Recorrido Virtual</h1>
+        <p>CONALEP Atizapán 1</p>
+    </div>
+    
+    <div class="content">
+        <div class="field">
+            <div class="label">👤 Nombre del Remitente:</div>
+            <div class="value">{{from_name}}</div>
+        </div>
+        
+        <div class="field">
+            <div class="label">📧 Email del Remitente:</div>
+            <div class="value">{{from_email}}</div>
+        </div>
+        
+        <div class="field">
+            <div class="label">💬 Mensaje:</div>
+            <div class="value">{{message}}</div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>Este mensaje fue enviado desde el recorrido virtual 360° de CONALEP Atizapán 1</p>
+        <p>📍 Av. Adolfo López Mateos 207, San Juan Atlamica, 52948 Cd López Mateos, Méx.</p>
+        <p>📞 55 5864 7000 | 📧 quintanargwork@gmail.com</p>
+    </div>
+</body>
+</html> 

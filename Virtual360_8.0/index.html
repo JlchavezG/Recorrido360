@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recorrido Virtual 360° - CONALEP Atizapán 1</title>
+    <!-- Fuentes -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Pannellum -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css" />
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="./css/styles.css">
+    <!-- Estilos de temas -->
+    <link rel="stylesheet" href="./css/themes.css">
+    <!-- Icono -->
+    <link rel="icon" type="image/png" href="./assets/img/logo.png">
+    <!-- Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5xxkl63r6KGfXhfZplo528NqcUQNRoiA&libraries=places">
+    </script>
+</head>
+
+<body>
+    <!-- Pantalla de carga previa llamativa -->
+    <div id="preloader-v360" class="preloader-v360">
+        <div class="preloader-content">
+            <div class="preloader-logo-circle">
+                <img src="./assets/img/logo.png" alt="CONALEP Logo" class="preloader-logo">
+            </div>
+            <h1 class="preloader-title">CONALEP Atizapán 1</h1>
+            <p class="preloader-subtitle">Recorrido Virtual 360°</p>
+            <div class="preloader-360-motifs">
+                <span class="preloader-360">360°</span>
+                <span class="preloader-orbit"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loader -->
+    <div id="loader" class="loader">
+        <div class="loader-content">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Cargando...</p>
+        </div>
+    </div>
+
+    <!-- Menú de navegación principal (solo superior para Home y Contacto) -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="./assets/img/logo.png" alt="CONALEP Logo">
+            </div>
+            <div class="nav-titles" style="flex:1; text-align:center;">
+                <span class="hero-title" style="font-size:1.5rem; font-weight:700; color:var(--text-light);">Bienvenido
+                    al Recorrido Virtual</span><br>
+                <span class="hero-subtitle" style="font-size:1rem; color:var(--accent-color);">Explora las instalaciones
+                    del CONALEP Atizapán 1 en 360°</span>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-link" data-section="home">
+                    <i class="fas fa-home"></i>
+                    Inicio
+                </a>
+                <a href="#contact" class="nav-link" data-section="contact">
+                    <i class="fas fa-envelope"></i>
+                    Contacto
+                </a>
+                <a href="#" class="nav-link" id="assistant-toggle-nav" data-section="assistant">
+                    <i class="fas fa-robot"></i>
+                    Asistente
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sección del Tour SIEMPRE visible -->
+    <section class="tour-section" style="display: block; height: 100vh; padding: 0;">
+        <div class="tour-fullscreen">
+            <div id="panorama" class="scene-viewer"></div>
+            <div id="streetview-panorama" class="scene-viewer" style="display: none;"></div>
+            <div id="audio-description-container" class="audio-description-container" style="display:none;">
+                <audio id="audio-description" controls preload="none">
+                    <source id="audio-description-source" src="" type="audio/mpeg">
+                    Tu navegador no soporta audio HTML5.
+                </audio>
+                <span id="audio-description-title" class="audio-description-title"></span>
+            </div>
+
+            <!-- Elementos de audio para el asistente virtual Coni -->
+            <audio id="coni-welcome-audio" preload="auto">
+                <source src="sounds/01.mp4" type="audio/mp4">
+            </audio>
+            <audio id="coni-message2-audio" preload="auto">
+                <source src="sounds/02.mp4" type="audio/mp4">
+            </audio>
+            <audio id="coni-message3-audio" preload="auto">
+                <source src="sounds/03.mp4" type="audio/mp4">
+            </audio>
+            <audio id="coni-off-audio" preload="auto">
+                <source src="sounds/02.mp4" type="audio/mp4">
+            </audio>
+
+            <!-- Asistente Virtual CONALEP - Estilo Siri -->
+            <div id="virtual-assistant" class="virtual-assistant">
+                <div class="assistant-avatar siri-style">
+                    <div class="siri-nebula"></div>
+                    <div class="siri-audio-lines">
+                        <div class="audio-line line-1"></div>
+                        <div class="audio-line line-2"></div>
+                        <div class="audio-line line-3"></div>
+                        <div class="audio-line line-4"></div>
+                        <div class="audio-line line-5"></div>
+                        <div class="audio-line line-6"></div>
+                        <div class="audio-line line-7"></div>
+                    </div>
+                    <div class="siri-waves">
+                        <div class="wave wave-1"></div>
+                        <div class="wave wave-2"></div>
+                        <div class="wave wave-3"></div>
+                        <div class="wave wave-4"></div>
+                        <div class="wave wave-5"></div>
+                    </div>
+                    <div class="siri-core"></div>
+                </div>
+                <div class="assistant-speech-bubble">
+                    <div class="speech-content">
+                        <p id="assistant-message">¡Hola! Soy Coni tu guía virtual. Haz clic en las miniaturas para
+                            explorar las instalaciones del CONALEP Atizapán 1.</p>
+                    </div>
+                    <div class="speech-tail"></div>
+                </div>
+                <div class="assistant-controls">
+                    <button id="assistant-toggle" class="assistant-toggle-btn" title="Activar/Desactivar asistente">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <button id="assistant-help" class="assistant-help-btn" title="Ayuda del asistente">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Indicador cuando las miniaturas están ocultas -->
+            <div id="thumbnails-hidden-indicator" class="thumbnails-hidden-indicator">
+                <i class="fas fa-eye-slash"></i>
+                Miniaturas ocultas
+                <button id="show-thumbnails-btn" class="show-thumbnails-btn" title="Mostrar miniaturas">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+
+            <!-- Controles de miniaturas -->
+            <div class="scene-thumbnails-wrapper">
+                <!-- Controles de miniaturas -->
+                <div class="mini-carousel-controls">
+                    <button id="mini-carousel-minimize-btn" class="mini-carousel-btn"
+                        title="Minimizar/Maximizar miniaturas">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button id="mini-carousel-hide-btn" class="mini-carousel-btn"
+                        title="Ocultar/Mostrar carrusel de miniaturas">
+                        <i class="fas fa-eye-slash"></i>
+                    </button>
+                </div>
+
+                <!-- Flecha izquierda para navegar entre escenas -->
+                <button class="thumbnails-arrow left" id="thumbnails-arrow-left" aria-label="Anterior">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+
+                <!-- Flecha izquierda para desplazamiento dentro del carrusel -->
+                <button class="carousel-nav-arrow left" id="carousel-nav-left" aria-label="Desplazar izquierda">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <!--Miniaturas de las escenas (generadas dinámicamente)-->
+                <div class="scene-thumbnails" id="scene-thumbnails-container">
+                    <!-- Las miniaturas se generarán automáticamente desde config.js -->
+                </div>
+
+                <!-- Flecha derecha para desplazamiento dentro del carrusel -->
+                <button class="carousel-nav-arrow right" id="carousel-nav-right" aria-label="Desplazar derecha">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+
+                <!-- Flecha derecha para navegar entre escenas -->
+                <button class="thumbnails-arrow right" id="thumbnails-arrow-right" aria-label="Siguiente">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Contacto -->
+    <section id="contact" class="section">
+        <div class="contact-container">
+            <div class="contact-info">
+                <h2>Enviános un Mensaje</h2>
+                <p>¿Tienes alguna pregunta? Estamos aquí para ayudarte.</p>
+                <div class="contact-details">
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Av. Adolfo López Mateos 207, San Juan Atlamica, 52948 Cd López Mateos, Méx.</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>55 5864 7000</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>conalepatizapan1virtual360@gmail.com</span>
+                    </div>
+                </div>
+            </div>
+            <form id="contactForm" class="contact-form">
+                <div class="form-group">
+                    <label for="name">Nombre</label>
+                    <input type="text" id="name" name="name" required autocomplete="name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Correo Electrónico</label>
+                    <input type="email" id="email" name="email" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="message">Mensaje</label>
+                    <textarea id="message" name="message" required autocomplete="off"></textarea>
+                </div>
+                <button type="submit" class="submit-button">
+                    <i class="fas fa-paper-plane"></i>
+                    Enviar Mensaje
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="./assets/img/logo.png" alt="CONALEP Logo">
+                    </div>
+                    <div class="footer-info">
+                        <h3>CONALEP Atizapán 1</h3>
+                        <p>Recorrido Virtual 360°</p>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <div class="developers-info">
+                        <h4>Developers</h4>
+                        <div class="developers-list">
+                            <div class="developer-item">
+                                <i class="fas fa-laptop-code"></i>
+                                <span>Dra. Gabriela JuárezQuintanar</span>
+                            </div>
+                            <div class="developer-item">
+                                <i class="fas fa-laptop-code"></i>
+                                <span>Johana Contreras Acosta</span>
+                            </div>
+                            <div class="developer-item">
+                                <i class="fas fa-laptop-code"></i>
+                                <span>Eszequiel Nieto Muñoz</span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <div class="footer-meta">
+                        <div class="generation-info">
+                            <i class="fas fa-users"></i>
+                            <span>Generación 23-26</span>
+                        </div>
+                        <div class="copyright">
+                            <i class="fas fa-copyright"></i>
+                            <span>2025 Todos los derechos reservados</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-divider"></div>
+            <div class="footer-bottom">
+                <p>Experiencia de realidad virtual inmersiva para explorar las instalaciones del CONALEP Atizapán 1</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <!-- Pannellum -->
+    <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+    <!-- Formspree - No requiere script adicional -->
+    <!-- Scripts personalizados -->
+    <script src="js/config.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/contact.js"></script>
+    <script src="js/assistant.js"></script>
+
+    <!-- Script para servidor local -->
+    <script>
+        // Verificar si estamos en un entorno local
+        if (window.location.protocol === 'file:') {
+            const message = document.createElement('div');
+            message.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: #ff4444;
+                color: white;
+                padding: 10px;
+                text-align: center;
+                z-index: 9999;
+            `;
+            message.innerHTML = `
+                <p>⚠️ Para evitar problemas de CORS, por favor ejecuta esta aplicación usando un servidor local.</p>
+                <p>Puedes usar Python: <code>python -m http.server</code> o Node.js: <code>npx serve</code></p>
+            `;
+            document.body.appendChild(message);
+        }
+    </script>
+
+    <script>
+        let btn = document.getElementById('mini-carousel-minimize-btn');
+        if (btn) btn.onclick = () => alert('¡Funciona!');
+    </script>
+
+    <script>
+        document.querySelectorAll('#mini-carousel-minimize-btn').length
+    </script>
+    <!-- aqui coloque el script para crear el contador sin bd solo -->
+    <script src="js/cconta.js"></script>
+    <!-- Modal para Street View (restaurado y actualizado) -->
+    <div id="streetview-modal" class="streetview-modal" style="display:none;">
+        <div class="streetview-modal-content">
+            <button id="close-streetview" class="close-streetview" title="Cerrar Street View"><i
+                    class="fas fa-times"></i></button>
+            <iframe id="streetview-iframe" width="100%" height="450" style="border:0; border-radius:12px;"
+                allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                src="https://www.google.com/maps/embed?pb=!3m2!1ses!2smx!4v1751519067934!5m2!1ses!2smx!6m8!1m7!1sSqaY_JtS5QmpYRAe53Gx-w!2m2!1d19.55265896593928!2d-99.26671167342474!3f170.37060101457956!4f-31.333625581753417!5f0.7820865974627469">
+            </iframe>
+        </div>
+    </div>
+</body>
+
+</html>

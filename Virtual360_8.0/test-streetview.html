@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba Street View - CONALEP</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        #streetview-test {
+            width: 100%;
+            height: 400px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .coordinates {
+            font-family: monospace;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Prueba Street View - CONALEP Atizapán 1</h1>
+        
+        <div class="test-section">
+            <h2>Información de Coordenadas</h2>
+            <div class="coordinates">
+                <strong>Coordenadas del CONALEP:</strong><br>
+                Latitud: 19.552034295873828<br>
+                Longitud: -99.26647481665836<br>
+                Dirección: Av. Adolfo López Mateos 207, San Juan Atlamica, 52948 Cd López Mateos, Méx.
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Estado de Google Maps API</h2>
+            <div id="api-status"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Prueba de Street View</h2>
+            <button onclick="testStreetView()">Probar Street View</button>
+            <button onclick="testAlternativeCoords()">Probar Coordenadas Alternativas</button>
+            <button onclick="clearTest()">Limpiar</button>
+            
+            <div id="streetview-test"></div>
+            <div id="test-results"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Logs de Depuración</h2>
+            <div id="debug-logs" style="background: #f8f9fa; padding: 10px; border-radius: 4px; font-family: monospace; max-height: 300px; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <!-- Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5xxkl63r6KGfXhfZplo528NqcUQNRoiA&libraries=places"></script>
+    
+    <script>
+        // Coordenadas del CONALEP
+        const CONALEP_COORDINATES = {
+            lat: 19.552034295873828,
+            lng: -99.26647481665836
+        };
+
+        let streetViewPanorama = null;
+        let streetViewService = null;
+
+        // Función para agregar logs
+        function addLog(message, type = 'info') {
+            const logsDiv = document.getElementById('debug-logs');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.style.color = type === 'error' ? 'red' : type === 'success' ? 'green' : 'blue';
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            logsDiv.appendChild(logEntry);
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+        }
+
+        // Verificar estado de la API
+        function checkAPIStatus() {
+            const statusDiv = document.getElementById('api-status');
+            
+            if (typeof google !== 'undefined' && google.maps) {
+                statusDiv.innerHTML = '<div class="status success">✅ Google Maps API cargada correctamente</div>';
+                addLog('Google Maps API disponible', 'success');
+                return true;
+            } else {
+                statusDiv.innerHTML = '<div class="status error">❌ Google Maps API no disponible</div>';
+                addLog('Google Maps API no disponible', 'error');
+                return false;
+            }
+        }
+
+        // Probar Street View
+        function testStreetView() {
+            addLog('Iniciando prueba de Street View...');
+            
+            if (!checkAPIStatus()) {
+                addLog('No se puede probar Street View: API no disponible', 'error');
+                return;
+            }
+
+            const container = document.getElementById('streetview-test');
+            const resultsDiv = document.getElementById('test-results');
+            
+            // Limpiar contenedor
+            container.innerHTML = '';
+            resultsDiv.innerHTML = '';
+
+            try {
+                addLog('Creando servicio de Street View...');
+                streetViewService = new google.maps.StreetViewService();
+
+                addLog('Creando panorama de Street View...');
+                streetViewPanorama = new google.maps.StreetViewPanorama(
+                    container,
+                    {
+                        position: CONALEP_COORDINATES,
+                        pov: {
+                            heading: 34,
+                            pitch: 10
+                        },
+                        zoom: 1,
+                        addressControl: false,
+                        fullscreenControl: false,
+                        motionTracking: false,
+                        motionTrackingControl: false,
+                        panControl: true,
+                        zoomControl: true,
+                        streetViewControl: false,
+                        clickToGo: true,
+                        scrollwheel: true,
+                        disableDoubleClickZoom: false,
+                        enableCloseButton: false
+                    }
+                );
+
+                // Agregar eventos
+                streetViewPanorama.addListener('position_changed', function() {
+                    const pos = streetViewPanorama.getPosition();
+                    addLog(`Posición actualizada: ${pos.lat()}, ${pos.lng()}`, 'success');
+                });
+
+                streetViewPanorama.addListener('status_changed', function() {
+                    const status = streetViewPanorama.getStatus();
+                    addLog(`Status del panorama: ${status}`, status === 'OK' ? 'success' : 'warning');
+                    
+                    if (status === 'OK') {
+                        resultsDiv.innerHTML = '<div class="status success">✅ Street View cargado correctamente</div>';
+                    } else {
+                        resultsDiv.innerHTML = `<div class="status warning">⚠️ Status: ${status}</div>`;
+                    }
+                });
+
+                // Verificar disponibilidad
+                addLog('Verificando disponibilidad de Street View...');
+                streetViewService.getPanorama({
+                    location: CONALEP_COORDINATES,
+                    radius: 100
+                }, function(data, status) {
+                    if (status === google.maps.StreetViewStatus.OK) {
+                        addLog(`✅ Street View disponible. Panorama ID: ${data.location.pano}`, 'success');
+                        resultsDiv.innerHTML += '<div class="status success">✅ Street View disponible en esta ubicación</div>';
+                    } else {
+                        addLog(`⚠️ Street View no disponible. Status: ${status}`, 'warning');
+                        resultsDiv.innerHTML += `<div class="status warning">⚠️ Street View no disponible. Status: ${status}</div>`;
+                    }
+                });
+
+            } catch (error) {
+                addLog(`Error al crear Street View: ${error.message}`, 'error');
+                resultsDiv.innerHTML = `<div class="status error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        // Probar coordenadas alternativas
+        function testAlternativeCoords() {
+            addLog('Probando coordenadas alternativas...');
+            
+            const alternativeCoords = [
+                { lat: CONALEP_COORDINATES.lat + 0.0001, lng: CONALEP_COORDINATES.lng + 0.0001 },
+                { lat: CONALEP_COORDINATES.lat - 0.0001, lng: CONALEP_COORDINATES.lng - 0.0001 },
+                { lat: CONALEP_COORDINATES.lat + 0.001, lng: CONALEP_COORDINATES.lng + 0.001 },
+                { lat: CONALEP_COORDINATES.lat - 0.001, lng: CONALEP_COORDINATES.lng - 0.001 }
+            ];
+
+            if (!streetViewService) {
+                streetViewService = new google.maps.StreetViewService();
+            }
+
+            alternativeCoords.forEach((coords, index) => {
+                addLog(`Probando coordenadas alternativas ${index + 1}: ${coords.lat}, ${coords.lng}`);
+                
+                streetViewService.getPanorama({
+                    location: coords,
+                    radius: 200
+                }, function(data, status) {
+                    if (status === google.maps.StreetViewStatus.OK) {
+                        addLog(`✅ Street View encontrado en coordenadas alternativas ${index + 1}`, 'success');
+                        if (streetViewPanorama) {
+                            streetViewPanorama.setPosition(coords);
+                        }
+                    } else {
+                        addLog(`❌ No disponible en coordenadas alternativas ${index + 1}`, 'warning');
+                    }
+                });
+            });
+        }
+
+        // Limpiar prueba
+        function clearTest() {
+            document.getElementById('streetview-test').innerHTML = '';
+            document.getElementById('test-results').innerHTML = '';
+            document.getElementById('debug-logs').innerHTML = '';
+            addLog('Prueba limpiada');
+        }
+
+        // Inicializar cuando la página cargue
+        window.addEventListener('load', function() {
+            addLog('Página cargada completamente');
+            checkAPIStatus();
+        });
+
+        // Verificar API cuando esté disponible
+        if (typeof google !== 'undefined' && google.maps) {
+            addLog('Google Maps API ya disponible al cargar la página');
+            checkAPIStatus();
+        } else {
+            addLog('Esperando carga de Google Maps API...');
+        }
+    </script>
+</body>
+</html> 

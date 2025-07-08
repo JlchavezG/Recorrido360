@@ -1,0 +1,16 @@
+{
+  "name": "virtual360",
+  "version": "1.0.0",
+  "description": "Este proyecto es un recorrido virtual interactivo del plantel Conalep Atizapán 1, que permite a los usuarios explorar las instalaciones a través de imágenes y videos en 360°.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

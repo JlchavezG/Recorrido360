@@ -1,0 +1,71 @@
+<svg width="120" height="80" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo del cielo -->
+  <defs>
+    <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#B0E0E6;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="buildingGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#696969;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#808080;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="groundGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8FBC8F;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#90EE90;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Cielo -->
+  <rect width="120" height="50" fill="url(#skyGradient)"/>
+  
+  <!-- Nubes -->
+  <ellipse cx="25" cy="15" rx="8" ry="4" fill="white" opacity="0.8"/>
+  <ellipse cx="35" cy="12" rx="6" ry="3" fill="white" opacity="0.8"/>
+  <ellipse cx="85" cy="18" rx="7" ry="3" fill="white" opacity="0.8"/>
+  <ellipse cx="95" cy="15" rx="5" ry="2" fill="white" opacity="0.8"/>
+  
+  <!-- Edificio principal -->
+  <rect x="30" y="25" width="60" height="25" fill="url(#buildingGradient)"/>
+  
+  <!-- Ventanas del edificio -->
+  <rect x="35" y="30" width="4" height="6" fill="#FFD700" opacity="0.8"/>
+  <rect x="42" y="30" width="4" height="6" fill="#FFD700" opacity="0.8"/>
+  <rect x="49" y="30" width="4" height="6" fill="#FFD700" opacity="0.8"/>
+  <rect x="56" y="30" width="4" height="6" fill="#FFD700" opacity="0.8"/>
+  <rect x="63" y="30" width="4" height="6" fill="#FFD700" opacity="0.8"/>
+  <rect x="70" y="30" width="4" height="6" fill="#FFD700" opacity="0.8"/>
+  <rect x="77" y="30" width="4" height="6" fill="#FFD700" opacity="0.8"/>
+  <rect x="84" y="30" width="4" height="6" fill="#FFD700" opacity="0.8"/>
+  
+  <!-- Ventanas segunda fila -->
+  <rect x="35" y="38" width="4" height="6" fill="#FFD700" opacity="0.8"/>
+  <rect x="42" y="38" width="4" height="6" fill="#FFD700" opacity="0.8"/>
+  <rect x="49" y="38" width="4" height="6" fill="#FFD700" opacity="0.8"/>
+  <rect x="56" y="38" width="4" height="6" fill="#FFD700" opacity="0.8"/>
+  <rect x="63" y="38" width="4" height="6" fill="#FFD700" opacity="0.8"/>
+  <rect x="70" y="38" width="4" height="6" fill="#FFD700" opacity="0.8"/>
+  <rect x="77" y="38" width="4" height="6" fill="#FFD700" opacity="0.8"/>
+  <rect x="84" y="38" width="4" height="6" fill="#FFD700" opacity="0.8"/>
+  
+  <!-- Entrada principal -->
+  <rect x="55" y="45" width="10" height="5" fill="#8B4513"/>
+  <rect x="57" y="46" width="6" height="3" fill="#000000"/>
+  
+  <!-- Suelo -->
+  <rect x="0" y="50" width="120" height="30" fill="url(#groundGradient)"/>
+  
+  <!-- Árboles -->
+  <ellipse cx="15" cy="45" rx="6" ry="8" fill="#228B22"/>
+  <ellipse cx="105" cy="47" rx="5" ry="7" fill="#228B22"/>
+  
+  <!-- Troncos -->
+  <rect x="14" y="50" width="2" height="8" fill="#8B4513"/>
+  <rect x="104" y="52" width="2" height="6" fill="#8B4513"/>
+  
+  <!-- Símbolo de ubicación -->
+  <circle cx="60" cy="35" r="3" fill="#FF0000" opacity="0.8"/>
+  <circle cx="60" cy="35" r="1.5" fill="white"/>
+  
+  <!-- Texto CONALEP -->
+  <text x="60" y="75" text-anchor="middle" font-family="Arial, sans-serif" font-size="6" fill="#333333" font-weight="bold">CONALEP</text>
+</svg> 
